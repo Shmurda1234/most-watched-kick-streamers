@@ -1,0 +1,48 @@
+name: scrape-most-watched-kick
+ 
+on:
+  schedule:
+    # Daily at 09:00 UTC (1 hour after most-followed kick at 08:00, 2h after twitch-streamers)
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+ 
+permissions:
+  contents: write
+ 
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+ 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+ 
+      - name: Install Python dependencies
+        run: |
+          cd scraper
+          pip install -r requirements.txt
+          playwright install chromium
+          playwright install-deps chromium
+ 
+      - name: Run scraper (continue on validation error)
+        run: python scraper/scrape.py || echo "Scraper failed but continuing to commit debug files"
+        continue-on-error: true
+ 
+      - name: Commit and push if data changed
+        if: always()
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "scrape-bot"
+          mkdir -p data
+          git add data/ || true
+          if ! git diff --staged --quiet; then
+            git commit -m "data: refresh most watched kick streamers $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+          else
+            echo "No changes to commit."
+          fi
