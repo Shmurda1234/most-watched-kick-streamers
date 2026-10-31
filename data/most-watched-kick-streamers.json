@@ -1,5 +1,5 @@
 {
-  "scraped_at": "2026-10-31T12:02:58.455295+00:00",
+  "scraped_at": "2026-10-31T14:55:29.993242+00:00",
   "source": "streamscharts.com",
   "period": "last_7_days",
   "channels": [
@@ -28,7 +28,7 @@
       "name": "korekore_ch",
       "slug": "korekore_ch",
       "url": "https://kick.com/korekore_ch",
-      "avatar": "https://cdnr.escharts.com/channels/78/id/57035257?width=56&height=56",
+      "avatar": "https://cdnr.escharts.com/channels/78/id/57035257",
       "country": "Japan",
       "country_code": "JP",
       "language": "JA",
